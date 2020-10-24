@@ -50,7 +50,7 @@
     - name: 'Set {{pgrole}} default Volume - {{ extension.stdout }}'
       set_fact:
         default_volumes:
-          - '{{path.stdout}}:{{path.stdout}}'
+          - '/mnt:/mnt'
           - '/opt/appdata/{{pgrole}}/database:/config'
           - '/tmp:/tmp'
           - '/opt/transcodes:/transcode'
