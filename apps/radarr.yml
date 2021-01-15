@@ -75,3 +75,14 @@
               - '{{pgrole}}'
         state: started
         labels: '{{pg_labels}}'
+
+    - name: 'Checking for existing app data'
+      stat:
+        path: /opt/appdata/{{pgrole}}/config.xml
+      register: confcheck
+
+    - name: 'Update {{pgrole}} for first time use'
+      block:
+        - pause:
+            prompt: "Wait for {{pgrole}} start up"
+            seconds: 5
