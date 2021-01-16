@@ -35,9 +35,6 @@
       stat:
         path: /opt/appdata/{{pgrole}}/nzbget.conf
       register: confcheck
-
-    - name: 'Including Tasks'
-      include_tasks: '/opt/coreapps/apps/templates/tasks/dynamic.yml'
       
     # LABELS ######################################################################
     - name: 'Adding Traefik'
