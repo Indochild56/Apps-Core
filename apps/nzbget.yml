@@ -19,9 +19,6 @@
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/coreapps/apps/_core.yml'
-      
-    - name: 'Including {{pgrole}} log job'
-      include_tasks: '/opt/coreapps/apps/crontabs/nzbget_cron.yml'
 
     - name: 'Including folders'
       include_tasks: '/opt/coreapps/apps/_downloaders.yml'
