@@ -1,8 +1,7 @@
 #!/bin/bash
 #
-# Title:      PGBlitz (Reference Title File)
-# Author(s):  Admin9705
-# URL:        https://pgblitz.com - http://github.pgblitz.com
+# Title:      NZBGET
+# Author(s):  FUU off Brandings
 # GNU:        General Public License v3.0
 #################################################################################
 ---
@@ -16,11 +15,14 @@
         pgrole: 'nzbget'
         intport: '6789'
         extport: '6789'
-        image: 'linuxserver/nzbget'
+        image: 'linuxserver/nzbget:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
       include_tasks: '/opt/coreapps/apps/_core.yml'
+      
+    - name: 'Including {{pgrole}} log job'
+      include_tasks: '/opt/coreapps/apps/crontabs/nzbget_cron.yml'
 
     - name: 'Including folders'
       include_tasks: '/opt/coreapps/apps/_downloaders.yml'
@@ -38,12 +40,16 @@
         path: /opt/appdata/{{pgrole}}/nzbget.conf
       register: confcheck
 
+    - name: 'Including Tasks'
+      include_tasks: '/opt/coreapps/apps/templates/tasks/dynamic.yml'
+      
     # LABELS ######################################################################
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
+          traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
           traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
           traefik.frontend.headers.SSLRedirect: 'true'
@@ -54,8 +60,6 @@
           traefik.frontend.headers.contentTypeNosniff: 'true'
           traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
           traefik.frontend.headers.forceSTSHeader: 'true'
-
-          traefik.frontend.auth.forward.address: '{{gauth}}'
 
     - name: 'Setting PG Volumes'
       set_fact:
